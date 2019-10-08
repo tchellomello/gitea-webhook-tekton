@@ -93,9 +93,16 @@ var config Config
 
 func main() {
 	var err error
-	config, err = readConfig("config.yaml")
+
+	// check if configuration file was passed via argument
+	yamlconf := os.Getenv("CONFIG")
+	if yamlconf == "" {
+		yamlconf = "config.yaml"
+	}
+
+	config, err = readConfig(yamlconf)
 	if err != nil {
-		log.Fatalf("Failed to read config yaml:%v", err)
+		log.Fatalf("Failed to read %v:%v", yamlconf, err)
 	}
 
 	http.HandleFunc("/webhook", webhook)
